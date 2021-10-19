@@ -9,3 +9,4 @@
  	$(generate) common <($(intersection) <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
  	$(generate) server <($(difference)   <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
  	$(generate) gui    <($(difference)   <($(union) $(GUI_EXES))    <($(union) $(SERVER_EXES)))
+
