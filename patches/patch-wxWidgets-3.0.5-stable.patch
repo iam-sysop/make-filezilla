@@ -1,0 +1,15 @@
+--- mediactrl_am.cpp	2020-04-22 08:09:28.000000000 -0500
++++ mediactrl_am-patched.cpp	2021-10-06 11:41:31.289382500 -0500
+@@ -2179,7 +2179,10 @@
+ //---------------------------------------------------------------------------
+ void wxAMMediaEvtHandler::OnActiveX(wxActiveXEvent& event)
+ {
+-    switch(event.GetDispatchId())
++    // switch(event.GetDispatchId())
++    // cast to unsigned long to fix narrowing error with case 0xfffffd9f
++    // when using clang
++    switch (static_cast<unsigned long>(event.GetDispatchId()))
+     {
+ #ifndef __WXWINCE__
+     case 0x00000001: // statechange in IActiveMovie
+
