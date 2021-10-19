@@ -10,3 +10,6 @@ As updates are made, tags will be added to the repository for version history. E
 [build-filezilla-server.md](https://github.com/thecarnie/make-filezilla/build-filezilla-server.md) - For cross-compile of FileZilla Server v1.0.1x+  
 [./patches](https://github.com/thecarnie/make-filezilla/patches) - various patches for cross-compile - reference from above guides.  
 [./scripts](https://github.com/thecarnie/make-filezilla/scripts) - various shells scripts that match instructions from above guides (useful if you wish to semi-automate the process or build your own version often).  
+
+---
+**ABSOLUTELY NO WARRANTY OR GUARANTEE GIVEN FOR USAGE OF THESE SCRIPTS OR GUIDES IN THIS REPO**
