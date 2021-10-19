@@ -1,0 +1,19 @@
+--- configure.ac	2021-10-08 15:47:53.143499100 -0500
++++ configure.ac-patched	2021-10-08 15:47:37.039454500 -0500
+@@ -479,8 +479,13 @@
+   if test -z "$use_precomp"; then
+     if test "X$GCC" = Xyes; then
+       if gcc_version=`$CC -dumpversion` > /dev/null 2>&1; then
+-        major=`echo $gcc_version | cut -d. -f1`
+-        minor=`echo $gcc_version | sed "s/@<:@-,a-z,A-Z@:>@.*//" | cut -d. -f2`
++      	if echo $host_os | grep "mingw" > /dev/null 2>&1; then
++      	  major=`echo $gcc_version | cut -d\- -f1`
++      	  minor=`echo $gcc_version | sed "s/@<:@-,a-z,A-Z@:>@.*//" | cut -d\- -f2`
++      	else
++      	  major=`echo $gcc_version | cut -d. -f1`
++      	  minor=`echo $gcc_version | sed "s/@<:@-,a-z,A-Z@:>@.*//" | cut -d. -f2`
++      	fi
+         if test -z "$major" || test -z "$minor"; then
+           use_precomp=no
+         elif test "$major" -ge 4; then
+
