@@ -1,0 +1,265 @@
+# Cross-compile FileZilla Client 3.56.x on Windows Subsystem for Linux (WSL1)
+  
+Guide is based on FileZilla at v3.56.x and libfilezilla v0.34 (r20) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
+
+* **REQUIRES** Windows 10 r1607 or higher
+* The filezilla-project recommends Debian 11 (bullseye) for cross-compile so it will be used here.  
+* All parts of this guide assume that your Program Files (x86) folder is located on drive C:  
+ You may need to adjust certain paths in these guides as needed to accomodate differences.
+* **RECOMMENDED** (but not required) to install a clean WSL userspace for this process.  
+  > Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered. A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
+
+<br>
+
+## Prepare Build Environment
+
+(in Windows) Download and install NSIS from SourceForge  
+https://sourceforge.net/projects/nsis/files/NSIS%203/3.08/nsis-3.08-setup.exe/download
+<br><br>
+
+### **Launch WSL**  
+  
+Add 32bit architecture for compiling Windows shell extension:  
+```shell
+dpkg --add-architecture i386
+```
+
+**RECOMMENDED**: Update the userspace prior to proceeding.  
+```shell
+apt-get update
+apt-get upgrade
+```
+
+Install required packages:
+```shell
+apt-get install wget git subversion \
+    gettext lzip automake autoconf autogen autopoint \
+    libtool make pkg-config wx-common \
+    mingw-w64 mingw-w64-tools 
+```
+
+Install optional `colormake` package (better visibility of any compile errors):
+```shell
+apt-get install colormake
+```
+
+Setup some paths:  
+```shell
+mkdir /sources && mkdir /builds && mkdir /builds/filezilla
+```
+
+Configure environment variables  
+> *optional*: download via wget from [here](
+https://gist.github.com/thecarnie/8c7ffd60b42aa5640849a4b1453b132c/raw/11d6720e278860c0cbbcd41f7bc23627f313630e/setup-fz-buildenv ) to /sources folder and execute via `source /sources/setup-fz-buildenv`  
+```shell
+export TPFX="/builds/filezilla"
+export THOST="x86_64-w64-mingw32"
+export TBLD="x86_64-pc-linux"
+export PATH="$TPFX/bin:$PATH"
+export CPPFLAGS="-I$TPFX/include"
+export LDFLAGS="-L$TPFX/lib"
+export LD_LIBRARY_PATH="-L$TPFX/lib"
+export PKG_CONFIG_PATH="$TPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
+```
+
+<br>
+
+## Download/Unpack Sources
+> Change to `/sources` folder before continuing.
+
+
+
+### Dependencies
+
+
+**GMP**
+```shell
+wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz
+tar xvf gmp-6.2.1.tar.lz
+```
+
+**Nettle**
+```shell
+wget https://ftp.gnu.org/gnu/nettle/nettle-3.7.3.tar.gz
+tar xvf nettle-3.7.3.tar.gz
+```
+
+**gnuTLS**
+```shell
+wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.2.tar.xz
+tar xvf gnutls-3.7.2.tar.xz
+```
+
+**sqlite**
+```shell
+wget https://www.sqlite.org/2021/sqlite-autoconf-3360000.tar.gz
+tar xvf sqlite-autoconf-3360000.tar.gz
+```
+
+**wxWidgets**  
+(latest 3.0 branch stable):
+```shell
+wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.5/wxWidgets-3.0.5.tar.bz2
+tar xjvf wxWidgets-3.0.5.tar.bz2
+```
+(latest 3.0 branch development):
+```shell
+git clone --branch WX_3_0_BRANCH --single-branch https://github.com/wxWidgets/wxWidgets.git wxWidgets-3.0.5
+```
+
+**libfilezilla**  
+(latest stable - 0.34.0 as of this guide against FileZilla v3.56.0):  
+```shell
+svn co https://svn.filezilla-project.org/svn/libfilezilla/tags/0.34.0 libfilezilla
+```
+(latest development):  
+```shell
+svn co https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
+```
+
+**FileZilla**  
+(latest stable - 3.56.0 as of this guide against libfilezilla 0.34):  
+```shell
+svn co https://svn.filezilla-project.org/svn/FileZilla3/tags/3.56.0 filezilla
+```
+(latest development):  
+```shell
+svn co https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
+```
+
+<br>
+
+## Build Dependencies
+> Most modern hardware is multi-core enabled.  When running `make` parallel builds can speed up compilation. All `make` commands below assume usage of a parallel build via `-jN` parameter where `N` = totalCoresAvailable - 1.  
+> Example (quad core): `make -j3`.
+>
+> Change to `/sources` folder before continuing.
+
+
+**COMPILE GMP**
+```shell
+cd gmp-6.2.1
+
+CC_FOR_BUILD=gcc ./configure --host=$THOST --prefix="$TPFX" --disable-static --enable-shared --enable-fat CFLAGS="-Wno-attributes"
+
+make -jN && make install
+
+cd ..
+```
+**COMPILE NETTLE**
+```shell
+cd nettle-3.7.3
+
+./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --enable-fat 
+
+make -jN && make install
+
+cd ..
+```
+**COMPILE GNUTLS**
+```shell
+cd gnutls-3.7.2
+
+autoreconf -f -i
+
+./configure \
+--build=$TBLD \
+--host=$THOST \
+--prefix="$TPFX" \
+--enable-shared \
+--disable-static \
+--without-p11-kit \
+--with-included-libtasn1 \
+--with-included-unistring \
+--enable-local-libopts \
+--disable-srp-authentication \
+--disable-dtls-srtp-support \
+--disable-heartbeat-support \
+--disable-psk-authentication \
+--disable-anon-authentication \
+--disable-openssl-compatibility \
+--without-tpm \
+--disable-cxx \
+--disable-guile \
+--disable-doc \
+--disable-maintainer-mode \
+--disable-libdane \
+ARFLAGS="cr"
+
+make -jN && make install
+
+cd ..
+```
+**COMPILE SQLITE**
+```shell
+cd sqlite-autoconf-3360000
+
+./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --disable-dynamic-extensions LDFLAGS=
+
+make -jN && make install
+
+cd ..
+```
+**COMPILE WXWIDGETS**  
+> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb/raw/9b0112bfe9b2c24aa7223fcc6b8cd9c35af1a334/patch-wxWidgets-3.0.5.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb
+```shell
+cd wxWidgets-3.0.5
+
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
+
+make -jN && make install
+
+cd ..
+```
+**COMPILE LIBFILEZILLA**  
+>As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba/raw/8aa08503d3f63783e110b6ea022a51164ea861c8/patch-libfilezilla-mingw-wsl.patch) and must be applied before `autoreconf`.  Visual here: https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba  
+>No patch is needed for v0.34.0 and above.  
+```shell
+cd libfilezilla
+
+autoreconf -f -i
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static ARFLAGS=cr
+
+make -jN && make install
+
+cd ..
+```
+## **COMPILE FILEZILLA**  
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://gist.github.com/thecarnie/88d256c5d007cebd40a31f14a948006a/raw/aa06f2e9fb2249d13df9908f3ece7b74370b637c/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://gist.github.com/thecarnie/88d256c5d007cebd40a31f14a948006a
+```shell
+cd filezilla
+
+autoreconf -f -i
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static --with-pugixml=builtin --with-wx-config="$TPFX/bin/wx-config"
+
+make -jN
+```
+
+The FileZilla.exe is now compiled.  The following commands will cleanup debug symbols and package the installer.
+> *optional*: download via wget from [here](
+https://gist.github.com/thecarnie/77763a7143f98b90169f2961a726e237/raw/ccdf33631940cd92617e2a6299f0c46c2ec38b76/package-fz-installer ) to /sources folder and execute via `chmod 777 /sources/package-fz-installer && /sources/package-fz-installer` 
+```shell
+$THOST-strip /sources/filezilla/src/interface/.libs/filezilla.exe
+$THOST-strip /sources/filezilla/src/putty/.libs/*.exe
+$THOST-strip /sources/filezilla/src/fzshellext/64/.libs/libfzshellext-0.dll
+$THOST-strip /sources/filezilla/src/fzshellext/32/.libs/libfzshellext-0.dll
+$THOST-strip /sources/filezilla/data/dlls_gui/*.dll
+
+cd /sources/filezilla/data
+"/mnt/c/Program Files (x86)/NSIS/makensis.exe" install.nsi
+
+cp FileZilla_3*_setup.exe $TPFX
+
+cd $TPFX
+```
+<br>
+
+---
+
+**There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  You can launch the installer from WSL if you choose or exit out to Windows first. 
+```shell
+cd /builds/filezilla
+chmod 777 FileZilla_3_setup.exe
+./FileZilla_3_setup.exe
+```
+
