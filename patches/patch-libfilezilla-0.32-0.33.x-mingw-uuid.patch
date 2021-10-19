@@ -1,0 +1,13 @@
+--- ./libfilezilla/configure.ac	2021-10-06 14:39:33.616104400 -0500
++++ ./libfilezilla/configure.ac-patch	2021-10-06 14:39:40.632198700 -0500
+@@ -117,7 +117,8 @@
+ fi
+ 
+ if test "$windows" = "1"; then
+-  libdeps="-lws2_32 -luuid -lole32"
++  AX_APPEND_FLAG([-Wl,-luuid],LDFLAGS)
++  libdeps="-lws2_32 -lole32"
+ else
+   libdeps=-lpthread
+   CHECK_ICONV([libdeps="$libdeps -liconv"])
+
