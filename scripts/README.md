@@ -1,4 +1,4 @@
-## **Miscellaneous shell scripts**
+## **Miscellaneous shell scripts for WSL1/Debian**
 
 
 ### FOR BUILDING FILEZILLA CLIENT/SERVER
