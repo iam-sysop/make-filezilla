@@ -1,0 +1,13 @@
+cd /sources/gmp-6.2.1
+make clean && make distclean
+cd /sources/nettle-3.7.3
+make clean && make distclean
+cd /sources/gnutls-3.7.2
+make clean && make distclean
+cd /sources/sqlite-autoconf-3360000
+make clean && make distclean
+cd /sources/wxWidgets-3.0.5
+make clean && make distclean
+cd /sources/libfilezilla
+make clean && make distclean
+cd ..
