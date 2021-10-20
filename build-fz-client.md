@@ -7,7 +7,9 @@ Guide is based on FileZilla at v3.56.x and libfilezilla v0.34 (r20) in the SVN -
 * All parts of this guide assume that your Program Files (x86) folder is located on drive C:  
  You may need to adjust certain paths in these guides as needed to accomodate differences.
 * **RECOMMENDED** (but not required) to install a clean WSL userspace for this process.  
-  > Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered. A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
+  * Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered.  
+  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  
+* This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
 
 <br>
 
@@ -225,7 +227,8 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch  
+> 
 > If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
 ```shell
 cd filezilla
@@ -248,15 +251,15 @@ $THOST-strip /sources/filezilla/data/dlls_gui/*.dll
 cd /sources/filezilla/data
 "/mnt/c/Program Files (x86)/NSIS/makensis.exe" install.nsi
 
-cp FileZilla_3*_setup.exe $TPFX
+cp FileZilla_3*_setup.exe $TPFX/..
 
-cd $TPFX
+cd $TPFX/..
 ```
 <br>
 
 ---
 
-**There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  You can launch the installer from WSL if you choose or exit out to Windows first. 
+**There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  You should be able to launch the installer from WSL if you choose or exit out to Windows first. 
 ```shell
 cd /builds/filezilla
 chmod 777 FileZilla_3_setup.exe
