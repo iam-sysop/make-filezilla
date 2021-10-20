@@ -45,14 +45,14 @@ apt-get install colormake
 
 Setup some paths:  
 ```shell
-mkdir /sources && mkdir /builds && mkdir /builds/filezilla
+mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/filezilla/client64
 ```
 
 Configure environment variables  
-> *optional*: download via wget from [here](
-https://gist.github.com/thecarnie/8c7ffd60b42aa5640849a4b1453b132c/raw/11d6720e278860c0cbbcd41f7bc23627f313630e/setup-fz-buildenv ) to /sources folder and execute via `source /sources/setup-fz-buildenv`  
+> *optional*: download helper script via wget from [here](
+https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz client64`  
 ```shell
-export TPFX="/builds/filezilla"
+export TPFX="/builds/filezilla/client64"
 export THOST="x86_64-w64-mingw32"
 export TBLD="x86_64-pc-linux"
 export PATH="$TPFX/bin:$PATH"
@@ -201,7 +201,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE WXWIDGETS**  
-> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb/raw/9b0112bfe9b2c24aa7223fcc6b8cd9c35af1a334/patch-wxWidgets-3.0.5.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb
+> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
 cd wxWidgets-3.0.5
 
@@ -212,7 +212,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE LIBFILEZILLA**  
->As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba/raw/8aa08503d3f63783e110b6ea022a51164ea861c8/patch-libfilezilla-mingw-wsl.patch) and must be applied before `autoreconf`.  Visual here: https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba  
+>As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch) and must be applied before `autoreconf`.  Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch  
 >No patch is needed for v0.34.0 and above.  
 ```shell
 cd libfilezilla
@@ -225,7 +225,8 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://gist.github.com/thecarnie/88d256c5d007cebd40a31f14a948006a/raw/aa06f2e9fb2249d13df9908f3ece7b74370b637c/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://gist.github.com/thecarnie/88d256c5d007cebd40a31f14a948006a
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch
+> If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
 ```shell
 cd filezilla
 
@@ -235,9 +236,8 @@ autoreconf -f -i
 make -jN
 ```
 
-The FileZilla.exe is now compiled.  The following commands will cleanup debug symbols and package the installer.
-> *optional*: download via wget from [here](
-https://gist.github.com/thecarnie/77763a7143f98b90169f2961a726e237/raw/ccdf33631940cd92617e2a6299f0c46c2ec38b76/package-fz-installer ) to /sources folder and execute via `chmod 777 /sources/package-fz-installer && /sources/package-fz-installer` 
+The FileZilla.exe should now be compiled.  The following commands will cleanup debug symbols and package the installer.
+> *optional*: download helper script via wget from [here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/package-fzclient ) to /sources folder and execute via `. /sources/package-fz-installer` 
 ```shell
 $THOST-strip /sources/filezilla/src/interface/.libs/filezilla.exe
 $THOST-strip /sources/filezilla/src/putty/.libs/*.exe
