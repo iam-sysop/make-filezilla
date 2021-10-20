@@ -1,13 +1,15 @@
 # Cross-compile FileZilla Server 1.0.1+ on Windows Subsystem for Linux (WSL1)
   
-Guide is based on FileZilla Server at v1.0.1 and libfilezilla v0.34 (r20) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
+Guide is based on FileZilla Server at v1.0.1 and libfilezilla v0.34 (r21) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
 
 * **REQUIRES** Windows 10 r1607 or higher
 * The filezilla-project recommends Debian 11 (bullseye) for cross-compile so it will be used here.  
 * All parts of this guide assume that your Program Files (x86) folder is located on drive C:  
  You may need to adjust certain paths in these guides as needed to accomodate differences.
 * **RECOMMENDED** (but not required) to install a clean WSL userspace for this process.  
-  > Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered. A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
+  * Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered.  
+  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  
+* This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
 
 <br>
 
@@ -45,14 +47,14 @@ apt-get install colormake
 
 Setup some paths:  
 ```shell
-mkdir /sources && mkdir /builds && mkdir /builds/filezilla-server
+mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/filezilla/server
 ```
 
 Configure environment variables  
-> *optional*: download via wget from [here](
-https://gist.github.com/thecarnie/8c7ffd60b42aa5640849a4b1453b132c/raw/11d6720e278860c0cbbcd41f7bc23627f313630e/setup-fz-buildenv ) to /sources folder and execute via `source /sources/setup-fz-buildenv`  
+> *optional*: download helper script via wget from [here](
+https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz server`
 ```shell
-export TPFX="/builds/filezilla-server"
+export TPFX="/builds/filezilla/server"
 export THOST="x86_64-w64-mingw32"
 export TBLD="x86_64-pc-linux"
 export PATH="$TPFX/bin:$PATH"
@@ -198,7 +200,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE WXWIDGETS**  
-> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb/raw/9b0112bfe9b2c24aa7223fcc6b8cd9c35af1a334/patch-wxWidgets-3.0.5.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://gist.github.com/thecarnie/5c6739d7fa3951f670096b32b553baeb
+> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
 cd wxWidgets-3.0.5
 
