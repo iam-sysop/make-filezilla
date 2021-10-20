@@ -11,4 +11,4 @@ cd /sources/filezilla/data
 
 mv FileZilla_*_setup*.exe $TPFX/..
 
-cd $TPFX
+cd $TPFX/..
