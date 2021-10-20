@@ -11,3 +11,6 @@ make clean && make distclean
 cd /sources/libfilezilla
 make clean && make distclean
 cd ..
+
+rm -rf $TPFX
+mkdir $TPFX
