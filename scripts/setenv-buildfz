@@ -1,0 +1,72 @@
+case "${1}x" in
+#	("client32x")
+#		THOST=i686-w64-mingw32
+#		TBLD=i686-pc-linux
+#		TPFX=/builds/filezilla/client32 
+#		;;
+	("client64x")
+		THOST=x86_64-w64-mingw32
+		TBLD=x86_64-pc-linux
+		TPFX=/builds/filezilla/client64 
+		;;
+	("serverx")
+		THOST=x86_64-w64-mingw32
+		TBLD=x86_64-pc-linux
+		TPFX=/builds/filezilla/server 
+		;;
+	(*)
+		echo "INVALID ENVIRONMENT OPTION SENT.  VALID OPTIONS = client64, server
+
+Please try again."
+		return 1
+		;;
+esac
+
+# store original path if not in environment 
+if test -z "${OPATH}"; then
+	export OPATH=$PATH
+	echo "Saving original executable search paths..."
+else
+	unset PATH
+	export PATH=$OPATH
+fi
+
+# store original pkgconfig path is not in environment
+if test -n ${FZBUILDENV}; then
+	unset PKG_CONFIG_PATH
+	export PKG_CONFIG_PATH=$OPKG_CONFIG_PATH	
+	echo "RESET pkg-config search paths..."
+else
+	export OPKG_CONFIG_PATH=$PKG_CONFIG_PATH
+	echo "Saving original pkg-config search paths..."	
+fi
+
+echo "Setting Configuration for ${1}..."
+echo -e "\r\n"
+
+export THOST=$THOST
+export TBLD=$TBLD
+export TPFX="/builds/filezilla/$1"
+export PATH="$TPFX/bin:$PATH"
+export CPPFLAGS="-I$TPFX/include"
+export LDFLAGS="-L$TPFX/lib"
+export LD_LIBRARY_PATH="-L$TPFX/lib"
+export PKG_CONFIG_PATH="$TPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export FZBUILDENV="isset"
+
+cd /sources
+
+echo "Current Environment:"
+echo "===================="
+echo -e "\r\n"
+echo "HOST: $THOST"
+echo "BLD:  $TBLD"
+echo "PFX:  $TPFX"
+echo "FLAGS:"
+echo "CPPFLAGS=$CPPFLAGS"
+echo "LDFLAGS=$LDFLAGS"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
+echo -e "\r\n"
+
+
