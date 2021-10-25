@@ -1,11 +1,12 @@
---- ./exe/Makefile.am	2021-10-09 23:29:19.066410200 -0500
-+++ ./exe/Makefile.am.patched	2021-07-05 08:10:49.000000000 -0500
+--- ./exe/Makefile.am.patched	2021-07-05 08:10:49.000000000 -0500
++++ ./exe/Makefile.am	2021-10-09 23:29:19.066410200 -0500
+
 @@ -62,7 +62,7 @@
  
  
  files/.prepared: $(ALL_EXES)
--	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$(prefix):$(bindir):$(libdir)" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
-+	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$$PATH" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
+-	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$$PATH" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
++	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$(prefix):$(bindir):$(libdir)" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
  	$(generate) common <($(intersection) <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
  	$(generate) server <($(difference)   <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
  	$(generate) gui    <($(difference)   <($(union) $(GUI_EXES))    <($(union) $(SERVER_EXES)))
