@@ -1,0 +1,11 @@
+--- install.nsi.in	2021-12-28 21:20:41.089904500 -0600
++++ install.upd.nsi.in	2021-10-08 16:22:28.220434600 -0500
+@@ -24,7 +24,7 @@
+ 
+   ; Name and file
+   Name "FileZilla Client ${VERSION}"
+-  OutFile "FileZilla_3_setup.exe"
++  OutFile "FileZilla_${VERSION_FULL}_setup.exe"
+ 
+   SetCompressor /SOLID LZMA
+ 
