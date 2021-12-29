@@ -1,6 +1,6 @@
-# Cross-compile FileZilla Client 3.56.x on Windows Subsystem for Linux (WSL1)
+# Cross-compile FileZilla Client 3.57.x on Windows Subsystem for Linux (WSL1)
   
-Guide is based on FileZilla at v3.56.x and libfilezilla v0.34 (r20) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
+Guide is based on FileZilla at v3.57.x and libfilezilla v0.35 (r22) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
 
 * **REQUIRES** Windows 10 r1607 or higher
 * The filezilla-project recommends Debian 11 (bullseye) for cross-compile so it will be used here.  
@@ -94,8 +94,8 @@ tar xvf gnutls-3.7.2.tar.xz
 
 **sqlite**
 ```shell
-wget https://www.sqlite.org/2021/sqlite-autoconf-3360000.tar.gz
-tar xvf sqlite-autoconf-3360000.tar.gz
+wget https://www.sqlite.org/2021/sqlite-autoconf-3370000.tar.gz
+tar xvf sqlite-autoconf-3370000.tar.gz
 ```
 
 **wxWidgets**  
@@ -110,9 +110,9 @@ git clone --branch WX_3_0_BRANCH --single-branch https://github.com/wxWidgets/wx
 ```
 
 **libfilezilla**  
-(latest stable - 0.34.0 as of this guide against FileZilla v3.56.0):  
+(latest stable - 0.35.0 as of this guide against FileZilla v3.57.0):  
 ```shell
-svn co https://svn.filezilla-project.org/svn/libfilezilla/tags/0.34.0 libfilezilla
+svn co -r 10522 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 (latest development):  
 ```shell
@@ -120,9 +120,9 @@ svn co https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 
 **FileZilla**  
-(latest stable - 3.56.0 as of this guide against libfilezilla 0.34):  
+(latest stable - 3.57.0 as of this guide against libfilezilla 0.35):  
 ```shell
-svn co https://svn.filezilla-project.org/svn/FileZilla3/tags/3.56.0 filezilla
+svn co -r 10521 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
 ```
 (latest development):  
 ```shell
@@ -194,7 +194,7 @@ cd ..
 ```
 **COMPILE SQLITE**
 ```shell
-cd sqlite-autoconf-3360000
+cd sqlite-autoconf-3370000
 
 ./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --disable-dynamic-extensions LDFLAGS=
 
