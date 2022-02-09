@@ -1,0 +1,12 @@
+--- Makefile.am	2021-11-16 03:55:48.000000000 -0600
++++ Makefile.am.patched	2022-02-09 15:02:46.084418400 -0600
+@@ -51,7 +51,7 @@
+ 
+ 
+ files/.prepared: $(ALL_EXES) $(GENERATORS_FILES)
+-	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$$PATH" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
++	"$(srcdir)/dllcopy.sh" "$(PKG_DESTDIR)" "$(STRIP)" "$(OBJDUMP)" "$(CXX)" "$(prefix):$(bindir):$(libdir)" "$(WX_LIBS) $(LIBFILEZILLA_LIBS)" $(ALL_EXES)
+ 	$(generate) common <($(intersection) <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
+ 	$(generate) server <($(difference)   <($(union) $(SERVER_EXES)) <($(union) $(GUI_EXES)))
+ 	$(generate) gui    <($(difference)   <($(union) $(GUI_EXES))    <($(union) $(SERVER_EXES)))
+
