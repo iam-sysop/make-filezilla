@@ -8,7 +8,7 @@ Guide is based on FileZilla Server at v1.0.1 and libfilezilla v0.34 (r21) in the
  You may need to adjust certain paths in these guides as needed to accomodate differences.
 * **RECOMMENDED** (but not required) to install a clean WSL userspace for this process.  
   * Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered.  
-  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  
+  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/iam-sysop/f2987d6873d370fc47d1279b2a0d0fcc).  
 * This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
 
 <br>
@@ -52,7 +52,7 @@ mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/file
 
 Configure environment variables  
 > *optional*: download helper script via wget from [here](
-https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz server`
+https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz server`
 ```shell
 export TPFX="/builds/filezilla/server"
 export THOST="x86_64-w64-mingw32"
@@ -200,7 +200,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE WXWIDGETS**  
-> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
+> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
 cd wxWidgets-3.0.5
 
@@ -211,7 +211,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE LIBFILEZILLA**  
->As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba/raw/8aa08503d3f63783e110b6ea022a51164ea861c8/patch-libfilezilla-mingw-wsl.patch) and must be applied before `autoreconf`.  Visual here: https://gist.github.com/thecarnie/a18fc424c958c32fb0c830db42e27cba  
+>As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://gist.github.com/iam-sysop/a18fc424c958c32fb0c830db42e27cba/raw/8aa08503d3f63783e110b6ea022a51164ea861c8/patch-libfilezilla-mingw-wsl.patch) and must be applied before `autoreconf`.  Visual here: https://gist.github.com/iam-sysop/a18fc424c958c32fb0c830db42e27cba  
 >
 >No patch is needed for v0.34.0 and above.  
 ```shell
@@ -225,7 +225,7 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA SERVER**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-server-Makefile.am.patch) that resolves this issue against v1.0.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla server source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-server-Makefile.am.patch
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-server-Makefile.am.patch) that resolves this issue against v1.0.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla server source may affect patch. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-server-Makefile.am.patch
 ```shell
 cd filezilla-server-1.0.1
 
