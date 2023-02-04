@@ -8,7 +8,7 @@ Guide is based on FileZilla at v3.57.x and libfilezilla v0.35 (r22) in the SVN -
  You may need to adjust certain paths in these guides as needed to accomodate differences.
 * **RECOMMENDED** (but not required) to install a clean WSL userspace for this process.  
   * Importing a clean userspace into WSL defaults that userspace to the root user.  This means ```sudo``` and other permissions requirements are generally not encountered.  
-  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/thecarnie/f2987d6873d370fc47d1279b2a0d0fcc).  
+  * A TL;DR guide to installing a clean WSL userspace [can be found here](https://gist.github.com/iam-sysop/f2987d6873d370fc47d1279b2a0d0fcc).  
 * This guide assumes you have knowledge of linux permissions and usage of sudo elevation as necessary.
 
 <br>
@@ -52,7 +52,7 @@ mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/file
 
 Configure environment variables  
 > *optional*: download helper script via wget from [here](
-https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz client64`  
+https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz client64`  
 ```shell
 export TPFX="/builds/filezilla/client64"
 export THOST="x86_64-w64-mingw32"
@@ -203,7 +203,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE WXWIDGETS**  
-> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
+> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
 cd wxWidgets-3.0.5
 
@@ -214,7 +214,7 @@ make -jN && make install
 cd ..
 ```
 **COMPILE LIBFILEZILLA**  
->As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch) and must be applied before `autoreconf`.  Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch  
+>As of v0.33 (r20) of libfilezilla, a compile error exists on MinGW due to libuuid not truly being an import library with libtool. It needs to be pulled in via gcc differently to successfully build.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch) and must be applied before `autoreconf`.  Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-libfilezilla-0.32-0.33.x-mingw-uuid.patch  
 >No patch is needed for v0.34.0 and above.  
 ```shell
 cd libfilezilla
@@ -227,9 +227,9 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch  
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch  
 > 
-> If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
+> If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
 ```shell
 cd filezilla
 
@@ -240,7 +240,7 @@ make -jN
 ```
 
 The FileZilla.exe should now be compiled.  The following commands will cleanup debug symbols and package the installer.
-> *optional*: download helper script via wget from [here](https://raw.githubusercontent.com/thecarnie/make-filezilla/main/scripts/package-fzclient ) to /sources folder and execute via `. /sources/package-fz-installer` 
+> *optional*: download helper script via wget from [here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/package-fzclient ) to /sources folder and execute via `. /sources/package-fz-installer` 
 ```shell
 $THOST-strip /sources/filezilla/src/interface/.libs/filezilla.exe
 $THOST-strip /sources/filezilla/src/putty/.libs/*.exe
