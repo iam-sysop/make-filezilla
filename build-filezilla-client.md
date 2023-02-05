@@ -1,6 +1,6 @@
 # Cross-compile FileZilla Client 3.57.x on Windows Subsystem for Linux (WSL1)
   
-Guide is based on FileZilla at v3.57.x and libfilezilla v0.35 (r22) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
+Guide is based on FileZilla at v3.63.x and libfilezilla v0.41 (r34) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
 
 * **REQUIRES** Windows 10 r1607 or higher
 * The filezilla-project recommends Debian 11 (bullseye) for cross-compile so it will be used here.  
@@ -82,37 +82,37 @@ tar xvf gmp-6.2.1.tar.lz
 
 **Nettle**
 ```shell
-wget https://ftp.gnu.org/gnu/nettle/nettle-3.7.3.tar.gz
-tar xvf nettle-3.7.3.tar.gz
+wget https://ftp.gnu.org/gnu/nettle/nettle-3.8.1.tar.gz
+tar xvf nettle-3.8.1.tar.gz
 ```
 
 **gnuTLS**
 ```shell
-wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.2.tar.xz
-tar xvf gnutls-3.7.2.tar.xz
+wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.8.tar.xz
+tar xvf gnutls-3.7.8.tar.xz
 ```
 
 **sqlite**
 ```shell
-wget https://www.sqlite.org/2021/sqlite-autoconf-3370000.tar.gz
-tar xvf sqlite-autoconf-3370000.tar.gz
+wget https://www.sqlite.org/2022/sqlite-autoconf-3400100.tar.gz
+tar xvf sqlite-autoconf-3400100.tar.gz
 ```
 
 **wxWidgets**  
 (latest 3.0 branch stable):
 ```shell
-wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.5/wxWidgets-3.0.5.tar.bz2
-tar xjvf wxWidgets-3.0.5.tar.bz2
+wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxWidgets-3.2.1.tar.bz2
+tar xjvf wxWidgets-3.2.1.tar.bz2
 ```
-(latest 3.0 branch development):
+(latest 3.2 branch development):
 ```shell
-git clone --branch WX_3_0_BRANCH --single-branch https://github.com/wxWidgets/wxWidgets.git wxWidgets-3.0.5
+git clone --branch 3.2 --single-branch https://github.com/wxWidgets/wxWidgets.git wxWidgets-3.2.1
 ```
 
 **libfilezilla**  
-(latest stable - 0.35.0 as of this guide against FileZilla v3.57.0):  
+(latest stable - 0.41.0 as of this guide against FileZilla v3.63.1):  
 ```shell
-svn co -r 10522 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
+svn co -r 10842 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 (latest development):  
 ```shell
@@ -120,9 +120,9 @@ svn co https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 
 **FileZilla**  
-(latest stable - 3.57.0 as of this guide against libfilezilla 0.35):  
+(latest stable - 3.63.1 as of this guide against libfilezilla 0.35):  
 ```shell
-svn co -r 10521 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
+svn co -r 10853 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
 ```
 (latest development):  
 ```shell
@@ -150,7 +150,7 @@ cd ..
 ```
 **COMPILE NETTLE**
 ```shell
-cd nettle-3.7.3
+cd nettle-3.8.1
 
 ./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --enable-fat 
 
@@ -160,7 +160,7 @@ cd ..
 ```
 **COMPILE GNUTLS**
 ```shell
-cd gnutls-3.7.2
+cd gnutls-3.7.8
 
 autoreconf -f -i
 
@@ -194,7 +194,7 @@ cd ..
 ```
 **COMPILE SQLITE**
 ```shell
-cd sqlite-autoconf-3370000
+cd sqlite-autoconf-3400100
 
 ./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --disable-dynamic-extensions LDFLAGS=
 
@@ -205,9 +205,9 @@ cd ..
 **COMPILE WXWIDGETS**  
 > If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
-cd wxWidgets-3.0.5
+cd wxWidgets-3.2.1
 
-./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --without-subdirs --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
 
 make -jN && make install
 
