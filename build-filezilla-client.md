@@ -259,10 +259,7 @@ cd $TPFX/..
 
 ---
 
-**There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  You should be able to launch the installer from WSL if you choose or exit out to Windows first. 
-```shell
-cd /builds/filezilla
-chmod 777 FileZilla_3_setup.exe
-./FileZilla_3_setup.exe
-```
+**There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  
+
+![FileZilla Client 3.63.1 via WSL build](https://github.com/iam-sysop/make-filezilla/blob/main/filezilla-3.63.1-wsl.png)
 
