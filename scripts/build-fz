@@ -1,0 +1,11 @@
+echo "BUILDING FILEZILLA 3"
+echo "================================="
+cd filezilla
+patch configure.ac ../patch-filezilla-configure.ac-mingw-pch.patch 
+patch data/Makefile.am ../patch-filezilla-Makefile.am.patch 
+patch data/install.nsi.in ../patch-filezilla-install.nsi.in.patch 
+autoreconf -f -i
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static --with-pugixml=builtin --with-wx-config="$TPFX/bin/wx-config"
+make -j3
+cd ..
+. package-fz-installer 

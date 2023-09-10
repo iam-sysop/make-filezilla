@@ -1,0 +1,77 @@
+echo "BUILDING GMP"
+echo "==============================="
+
+cd gmp-6.3.0
+CC_FOR_BUILD=gcc ./configure --host=$THOST --prefix="$TPFX" --disable-static --enable-shared --enable-fat CFLAGS="-Wno-attributes"
+make -j3 && make install
+cd ..
+
+echo "BUILDING NETTLE"
+echo "==============================="
+cd nettle-3.9.1
+./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --enable-fat 
+make -j3 && make install
+cd ..
+
+echo "BUILDING ZLIB"
+echo "==============================="
+cd zlib-1.3
+CHOST=$THOST SHAREDLIB=zlib1.dll IMPLIB=zlib1.dll.a ./configure --prefix=$TPFX
+make -j3 && make install
+cd ..
+
+echo "BUILDING GNUTLS"
+echo "==============================="
+cd gnutls-3.8.1
+autoreconf -f -i
+./configure \
+--build=$TBLD \
+--host=$THOST \
+--prefix="$TPFX" \
+--enable-shared \
+--disable-static \
+--without-p11-kit \
+--with-included-libtasn1 \
+--with-included-unistring \
+--enable-local-libopts \
+--disable-srp-authentication \
+--disable-dtls-srtp-support \
+--disable-heartbeat-support \
+--disable-psk-authentication \
+--disable-anon-authentication \
+--disable-openssl-compatibility \
+--without-tpm \
+--without-brotli \
+--disable-cxx \
+--disable-guile \
+--disable-doc \
+--disable-maintainer-mode \
+--disable-libdane \
+--enable-threads=windows \
+--disable-tools \
+ARFLAGS="cr" \
+CFLAGS="-Wno-unused-function -Wno-unused-variable -Wno-unused-macros"
+make -j3 && make install
+cd ..
+
+echo "BUILDING SQLITE"
+echo "==============================="
+cd sqlite-autoconf-3430000
+./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --disable-dynamic-extensions LDFLAGS=
+make -j3 && make install
+cd ..
+
+echo "BUILDING WXWIDGETS"
+echo "==============================="
+cd wxWidgets-3.2.x
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
+make -j3 && make install
+cd ..
+
+echo "BUILDING libfilezilla"
+echo "==============================="
+cd libfilezilla
+autoreconf -f -i
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-static ARFLAGS=cr
+make -j3 && make install
+cd ..

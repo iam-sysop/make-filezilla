@@ -1,0 +1,11 @@
+rm -rf gmp*
+rm -rf nettle*
+rm -rf zlib*
+rm -rf gnutls*
+rm -rf sqlite*
+rm -rf wxWidgets*
+rm -rf libfilezilla*
+rm -rf filezilla*
+
+rm -rf /builds/filezilla/client64
+mkdir /builds/filezilla/client64
