@@ -1,6 +1,6 @@
-# Cross-compile FileZilla Client 3.57.x on Windows Subsystem for Linux (WSL1)
+# Cross-compile FileZilla Client 3.65.x on Windows Subsystem for Linux (WSL1)
   
-Guide is based on FileZilla at v3.63.x and libfilezilla v0.41 (r34) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
+Guide is based on FileZilla at v3.65.0 and libfilezilla v0.44 (r40) in the SVN - all attempts will be made to keep guide relatively current.  Some dependencies are version specific based on the SVN revision of FileZilla and libfilezilla - recommended to follow versions as noted.  
 
 * **REQUIRES** Windows 10 r1607 or higher
 * The filezilla-project recommends Debian 11 (bullseye) for cross-compile so it will be used here.  
@@ -16,7 +16,7 @@ Guide is based on FileZilla at v3.63.x and libfilezilla v0.41 (r34) in the SVN -
 ## Prepare Build Environment
 
 (in Windows) Download and install NSIS from SourceForge  
-https://sourceforge.net/projects/nsis/files/NSIS%203/3.08/nsis-3.08-setup.exe/download
+https://sourceforge.net/projects/nsis/files/NSIS%203/3.09/nsis-3.09-setup.exe/download
 <br><br>
 
 ### **Launch WSL**  
@@ -37,7 +37,7 @@ Install required packages:
 apt-get install wget git subversion \
     gettext lzip automake autoconf autogen autopoint \
     libtool make pkg-config wx-common \
-    mingw-w64 mingw-w64-tools 
+    mingw-w64 mingw-w64-tools
 ```
 
 Install optional `colormake` package (better visibility of any compile errors):
@@ -76,43 +76,51 @@ export PKG_CONFIG_PATH="$TPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 **GMP**
 ```shell
-wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz
-tar xvf gmp-6.2.1.tar.lz
+wget https://gmplib.org/download/gmp/gmp-6.3.0.tar.lz
+tar xvf gmp-6.3.0.tar.lz
 ```
 
 **Nettle**
 ```shell
-wget https://ftp.gnu.org/gnu/nettle/nettle-3.8.1.tar.gz
-tar xvf nettle-3.8.1.tar.gz
+wget https://ftp.gnu.org/gnu/nettle/nettle-3.9.1.tar.gz
+tar xvf nettle-3.9.1.tar.gz
+```
+
+**zlib**
+```shell
+wget http://zlib.net/zlib-1.3.tar.gz
+tar xf zlib-1.3.tar.gz
 ```
 
 **gnuTLS**
 ```shell
-wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.8.tar.xz
-tar xvf gnutls-3.7.8.tar.xz
+wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.1.tar.xz
+tar xvf gnutls-3.8.1.tar.xz
 ```
 
 **sqlite**
 ```shell
-wget https://www.sqlite.org/2022/sqlite-autoconf-3400100.tar.gz
-tar xvf sqlite-autoconf-3400100.tar.gz
+wget https://www.sqlite.org/2023/sqlite-autoconf-3430000.tar.gz
+tar xvf sqlite-autoconf-3430000.tar.gz
 ```
 
 **wxWidgets**  
-(latest 3.0 branch stable):
+(latest 3.2 branch stable):
 ```shell
-wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.1/wxWidgets-3.2.1.tar.bz2
-tar xjvf wxWidgets-3.2.1.tar.bz2
+wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.2.svn co -r 10987 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezillasvn co -r 10997 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla1/wxWidgets-3.2.2.1.tar.bz2
+tar xjvf wxWidgets-3.2.2.1.tar.bz2
+mv wxWidgets-3.2.2.1 wxWidgets-3.2.x
 ```
+
 (latest 3.2 branch development):
 ```shell
-git clone --branch 3.2 --single-branch https://github.com/wxWidgets/wxWidgets.git wxWidgets-3.2.1
+git clone --branch 3.2 --single-branch https://github.com/wxWidgets/wxWidgets.git wxWidgets-3.2.x
 ```
 
 **libfilezilla**  
-(latest stable - 0.41.0 as of this guide against FileZilla v3.63.1):  
+(latest stable - 0.44.0 as of this guide against FileZilla v3.65.0):  
 ```shell
-svn co -r 10842 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
+svn co -r 10987 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 (latest development):  
 ```shell
@@ -120,9 +128,9 @@ svn co https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 
 **FileZilla**  
-(latest stable - 3.63.1 as of this guide against libfilezilla 0.35):  
+(latest stable - 3.65.0 as of this guide against libfilezilla 0.44):  
 ```shell
-svn co -r 10853 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
+svn co -r 10997 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
 ```
 (latest development):  
 ```shell
@@ -140,7 +148,7 @@ svn co https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla
 
 **COMPILE GMP**
 ```shell
-cd gmp-6.2.1
+cd gmp-6.3.0
 
 CC_FOR_BUILD=gcc ./configure --host=$THOST --prefix="$TPFX" --disable-static --enable-shared --enable-fat CFLAGS="-Wno-attributes"
 
@@ -150,7 +158,7 @@ cd ..
 ```
 **COMPILE NETTLE**
 ```shell
-cd nettle-3.8.1
+cd nettle-3.9.1
 
 ./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --enable-fat 
 
@@ -158,9 +166,19 @@ make -jN && make install
 
 cd ..
 ```
+**COMPILE ZLIB**
+```shell
+cd zlib-1.3
+
+CHOST=$THOST SHAREDLIB=zlib1.dll IMPLIB=zlib1.dll.a ./configure --prefix="$TPFX" 
+
+make -jN && make install
+
+cd ..
+```
 **COMPILE GNUTLS**
 ```shell
-cd gnutls-3.7.8
+cd gnutls-3.8.1
 
 autoreconf -f -i
 
@@ -181,12 +199,16 @@ autoreconf -f -i
 --disable-anon-authentication \
 --disable-openssl-compatibility \
 --without-tpm \
+--without-brotli \
 --disable-cxx \
 --disable-guile \
 --disable-doc \
 --disable-maintainer-mode \
 --disable-libdane \
-ARFLAGS="cr"
+--enable-threads=windows \
+--disable-tools \
+ARFLAGS="cr" \
+CFLAGS="-Wno-unused-function -Wno-unused-variable -Wno-unused-macros"
 
 make -jN && make install
 
@@ -194,7 +216,7 @@ cd ..
 ```
 **COMPILE SQLITE**
 ```shell
-cd sqlite-autoconf-3400100
+cd sqlite-autoconf-3430000
 
 ./configure --host=$THOST --prefix="$TPFX" --enable-shared --disable-static --disable-dynamic-extensions LDFLAGS=
 
@@ -203,11 +225,10 @@ make -jN && make install
 cd ..
 ```
 **COMPILE WXWIDGETS**  
-> If you are using the latest-stable release (3.0.5), a patch must be applied in order for compilation to be successful.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-wxWidgets-3.0.5-stable.patch) and must be applied before `configure`. If you are pulling from git patch should not be necessary. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-wxWidgets-3.0.5-stable.patch
 ```shell
-cd wxWidgets-3.2.1
+cd wxWidgets-3.2.x
 
-./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --without-subdirs --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
+./configure --host=$THOST --build=$TBLD --prefix="$TPFX" --enable-shared --disable-gtktest --disable-sdltest --enable-vendor=mingw32 --disable-compat28
 
 make -jN && make install
 
@@ -238,6 +259,16 @@ autoreconf -f -i
 
 make -jN
 ```
+> If you get an error about missing Boost Regex required, run the steps below, then go back and re-run FileZilla configure and make steps.
+```shell
+apt-get install build-essential
+wget https://boostorg.jfrog.io/artifactory/main/release/1.83.0/source/boost_1_83_0.tar.bz2
+tar xjvf boost_1_83_0.tar.bz2
+cd boost_1_83_0
+echo "using gcc :  : x86_64-w64-mingw32-g++ ;" > user-config.jam
+./bootstrap.sh
+./b2 --user-config=./user-config.jam --with-regex --prefix=$TPFX target-os=windows address-model=64 variant=release install
+```
 
 The FileZilla.exe should now be compiled.  The following commands will cleanup debug symbols and package the installer.
 > *optional*: download helper script via wget from [here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/package-fzclient ) to /sources folder and execute via `. /sources/package-fz-installer` 
@@ -261,5 +292,4 @@ cd $TPFX/..
 
 **There should now be a FileZilla_3_setup.exe file available in the /builds/filezilla folder ready for installation on Windows.**  
 
-![FileZilla Client 3.63.1 via WSL build](https://github.com/iam-sysop/make-filezilla/blob/main/filezilla-3.63.1-wsl.png)
-
+![FileZilla Client 3.65.0 via WSL build](https://github.com/iam-sysop/make-filezilla/blob/main/filezilla-3.65.0-wsl.png)
