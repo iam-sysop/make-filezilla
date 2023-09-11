@@ -1,3 +1,0 @@
-rm -rf /builds/filezilla/client64
-mkdir /builds/filezilla/client64
-

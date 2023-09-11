@@ -1,7 +1,0 @@
-apt-get install build-essential
-wget https://boostorg.jfrog.io/artifactory/main/release/1.83.0/source/boost_1_83_0.tar.bz2
-tar xjvf boost_1_83_0.tar.bz2
-cd boost_1_83_0
-echo "using gcc :  : x86_64-w64-mingw32-g++ ;" > user-config.jam
-./bootstrap.sh
-./b2 --user-config=./user-config.jam --with-regex --prefix=$TPFX target-os=windows address-model=64 variant=release install
