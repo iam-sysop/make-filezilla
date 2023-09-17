@@ -135,10 +135,9 @@ svn co https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezilla
 ```
 
 **FileZilla Server**  
-(latest stable - 1.7.3+ as of this guide against libfilezilla 0.34):  
-> FileZilla Server Source to match a stable build is only available through web download here:  
-> https://filezilla-project.org/download.php?show_all=1&type=server  
-> This page generates a unique "download ticket" in order to retrieve "stable release source".
+(latest stable - 1.7.3+ as of this guide against libfilezilla 0.44):  
+> FileZilla Server Source archives are available here:   
+> https://download.filezilla-project.org/server/  
 >
 > Nightly source can be retrieved here by replacing the {braces data} with actual values:  
 > https://filezilla-project.org/nightlies_server/{YYYY-MM-DD}/FileZilla_Server_snapshot_{YYYYMMDD}_src.tar.xz  
