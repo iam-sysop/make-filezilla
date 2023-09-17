@@ -19,7 +19,7 @@ Guide is based on FileZilla Server at v1.7.3 and libfilezilla v0.44 (r40) in the
 https://sourceforge.net/projects/nsis/files/NSIS%203/3.09/nsis-3.09-setup.exe/download
 <br><br>
 You also need the "Access Control" plugin for NSIS:  
-> Copy the AccessControl.dll from inside the zip at Plugins/i386-unicode to your NSIS plugins folder (usually at C:\Program Files (x86)\NSIS\Plugins\x86-unicode or NSIS will fail when packaging FileZilla Server.
+> Copy the AccessControl.dll from inside the zip at Plugins/i386-unicode to your NSIS plugins folder ( usually at C:\Program Files (x86)\NSIS\Plugins\x86-unicode ) or NSIS will fail when packaging FileZilla Server.
 
 https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
 <br><br>
