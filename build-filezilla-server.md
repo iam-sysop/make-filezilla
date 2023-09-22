@@ -260,7 +260,7 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA SERVER**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-server-pkg-Makefile.am.patch) that resolves this issue against v1.7.3 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla server source may affect patch. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-server-Makefile.am.patch
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-server-pkg-Makefile.am.patch) that resolves this issue against v1.7.3 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla server source may affect patch. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-server-pkg-Makefile.am.patch
 ```shell
 cd filezilla-server-1.7.3
 
