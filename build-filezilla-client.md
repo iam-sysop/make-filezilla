@@ -107,7 +107,7 @@ tar xvf sqlite-autoconf-3430000.tar.gz
 **wxWidgets**  
 (latest 3.2 branch stable):
 ```shell
-wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.2.svn co -r 10987 https://svn.filezilla-project.org/svn/libfilezilla/trunk libfilezillasvn co -r 10997 https://svn.filezilla-project.org/svn/FileZilla3/trunk filezilla1/wxWidgets-3.2.2.1.tar.bz2
+wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.2.1/wxWidgets-3.2.2.1.tar.bz2
 tar xjvf wxWidgets-3.2.2.1.tar.bz2
 mv wxWidgets-3.2.2.1 wxWidgets-3.2.x
 ```
