@@ -1,6 +1,6 @@
 --- configure.ac	2021-10-08 15:47:53.143499100 -0500
 +++ configure.ac-patched	2021-10-08 15:47:37.039454500 -0500
-@@ -479,8 +479,13 @@
+@@ -516,8 +516,13 @@
    if test -z "$use_precomp"; then
      if test "X$GCC" = Xyes; then
        if gcc_version=`$CC -dumpversion` > /dev/null 2>&1; then
