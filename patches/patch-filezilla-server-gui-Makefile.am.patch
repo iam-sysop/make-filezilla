@@ -1,0 +1,10 @@
+--- filezilla-server/src/gui/Makefile.am	2025-04-27 21:30:34.418682100 -0500
++++ Makefile.am.patched	2025-04-27 21:52:48.005078400 -0500
+@@ -92,7 +92,6 @@
+ 	wrappedtext.cpp
+ 
+ if FZ_WINDOWS
+-    EXTRA_CXXFLAGS = -DwxCRT_StrdupA=strdup
+     EXTRA_LDADD = $(top_builddir)/res/filezilla-server-gui.o
+     EXTRA_LIBS =
+ endif

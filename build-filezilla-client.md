@@ -52,8 +52,6 @@ mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/file
 ```
 
 Configure environment variables  
-> *optional*: download helper script via wget from [here](
-https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz client64`  
 ```shell
 export TPFX="/builds/filezilla/client64"
 export THOST="x86_64-w64-mingw32"
@@ -258,9 +256,9 @@ make -jN && make install
 cd ..
 ```
 ## **COMPILE FILEZILLA**  
-> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch  
+> Under WSL, path issues cause GCC's objdump to pull in too many DLLs for export.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-Makefile.am.patch) that resolves this issue against v3.55.1 and up of the code so that DLLs are properly dumped for linking, as well as collecting for the installer package. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-Makefile.am.patch  
 > 
-> If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/thecarnie/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
+> If you wish to make use of precompiled headers, the following patch is required to overcome MinGW GCC-10 dumpversion output readible by `configure`.  A .patch file is [available here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/patches/patch-filezilla-configure.ac-mingw-pch.patch) that resolves this issue and allows `configure` to properly detect a valid compiler and use precompiled headers. Patch must be applied before `autoreconf`. **WARNING**: verify patch against local file before applying - updates to filezilla source may affect patch. Visual here: https://github.com/iam-sysop/make-filezilla/blob/main/patches/patch-filezilla-configure.ac-mingw-pch.patch
 ```shell
 cd filezilla
 
@@ -281,7 +279,6 @@ echo "using gcc :  : x86_64-w64-mingw32-g++ ;" > user-config.jam
 ```
 
 The FileZilla.exe should now be compiled.  The following commands will cleanup debug symbols and package the installer.
-> *optional*: download helper script via wget from [here](https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/package-fzclient ) to /sources folder and execute via `. /sources/package-fz-installer` 
 ```shell
 $THOST-strip /sources/filezilla/src/interface/.libs/filezilla.exe
 $THOST-strip /sources/filezilla/src/putty/.libs/*.exe
