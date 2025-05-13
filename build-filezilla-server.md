@@ -60,8 +60,6 @@ mkdir /sources && mkdir /builds && mkdir /builds/filezilla && mkdir /builds/file
 ```
 
 Configure environment variables  
-> *optional*: download helper script via wget from [here](
-https://raw.githubusercontent.com/iam-sysop/make-filezilla/main/scripts/setenv-buildfz ) to /sources folder and execute via `. /sources/setenv-buildfz server`
 ```shell
 export TPFX="/builds/filezilla/server"
 export THOST="x86_64-w64-mingw32"
